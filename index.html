@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HANDI PURNAWAN | Creative Technologist</title>
+    <title>HANDI PURNAWAN | Creative Technologist Portfolio</title>
+    
+    <!-- Favicon (Browser Tab Icon) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23DA291C%22/><text x=%2250%22 y=%2272%22 font-family=%22sans-serif%22 font-weight=%22bold%22 font-size=%2265%22 fill=%22white%22 text-anchor=%22middle%22>H</text></svg>" type="image/svg+xml">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tambahan Devicon untuk Logo Software -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
     
     <script>
         tailwind.config = {
@@ -14,23 +19,23 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#fdf2f2',
-                            400: '#f05252',
-                            500: '#DA291C', // Manchester United Red
-                            600: '#b02117', // Darker MU Red
-                        },
-                        surface: {
-                            50: '#fcfbf9',  // Warm paper white
-                            100: '#f4f1ee', // Off-white untuk card
-                        },
-                        zinc: {
-                            800: '#27272a',
-                            900: '#18181b', // Hitam pekat
+                            500: '#DA291C', // MU Red
+                            600: '#B91C1C',
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        display: ['"Space Grotesk"', 'sans-serif'], // Font artistik untuk Heading
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['"Space Grotesk"', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
                     }
                 }
             }
@@ -39,481 +44,673 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
         
+        :root {
+            --bg: #ffffff;
+            --text: #171717;
+        }
+
         body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #fcfbf9;
-            /* Pola Dot Grid Samar - Tetap dipertahankan untuk kesan teknis */
-            background-image: radial-gradient(#e5e1d8 1px, transparent 1px);
-            background-size: 24px 24px;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
         }
 
-        .font-display {
-            font-family: '"Space Grotesk"', sans-serif;
-        }
-        
-        .gradient-text {
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            /* Gradien merah MU ke merah gelap */
-            background-image: linear-gradient(135deg, #DA291C, #8a1710);
+        /* Custom Cursor */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            background: #DA291C;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease, background 0.3s ease, opacity 0.3s ease;
+            mix-blend-mode: difference;
         }
 
-        /* Hover efek pada galeri: TANPA DROPSHADOW, murni pergerakan dan garis */
-        .gallery-item {
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-            border-radius: 1rem;
-            transition: transform 0.4s ease, border-color 0.4s ease;
-            border: 1px solid #e4e4e7;
-        }
-        .gallery-item img {
-            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .gallery-item:hover {
-            transform: translateY(-6px);
-            border-color: #DA291C;
-        }
-        .gallery-item:hover img {
-            transform: scale(1.05);
-        }
-        .gallery-overlay {
-            background: linear-gradient(to top, rgba(24, 24, 27, 0.95) 0%, rgba(24, 24, 27, 0) 100%);
+        /* Reveal Animation */
+        .reveal {
             opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        .gallery-item:hover .gallery-overlay {
-            opacity: 1;
+            transform: translateY(40px) scale(0.98);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Custom Selection Color */
-        ::selection {
-            background-color: #DA291C;
-            color: white;
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Portfolio Interaction */
+        .portfolio-item {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .portfolio-item.hidden {
+            display: none;
+            opacity: 0;
+        }
+
+        .filter-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #DA291C;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .filter-btn.active::after {
+            width: 80%;
+        }
+
+        /* Magnetic Hover Effect for Images */
+        .img-container-hover {
+            clip-path: inset(0% 0% 0% 0% round(1.5rem));
+            transition: clip-path 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .portfolio-item:hover .img-container-hover {
+            clip-path: inset(2% 2% 2% 2% round(2rem));
+        }
+
+        .magnetic {
+            display: inline-block;
+            transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* Progress Bar */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: #DA291C;
+            z-index: 100;
+            width: 0%;
         }
     </style>
 </head>
-<body class="text-zinc-800 antialiased selection:bg-brand-500 selection:text-white">
+<body class="antialiased selection:bg-brand-500 selection:text-white">
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-40 bg-[#fcfbf9]/95 backdrop-blur-sm border-b border-zinc-200 transition-all">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-24">
-                <div class="flex-shrink-0 font-display font-bold text-2xl tracking-tighter text-zinc-900">
-                    HANDI PURNAWAN<span class="text-brand-500">.</span>
+    <div id="cursor" class="hidden md:block"></div>
+    <div id="progress-bar"></div>
+
+    <!-- Header Navigation -->
+    <header class="fixed w-full z-50 transition-all duration-500 px-6 py-6" id="main-nav">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="#" class="font-display font-bold text-2xl tracking-tighter magnetic">
+                HANDI<span class="text-brand-500">.</span>
+            </a>
+            <div class="flex items-center gap-6">
+                <nav class="hidden md:flex space-x-12 text-[10px] font-bold uppercase tracking-[0.3em] mr-4">
+                    <a href="#about" class="hover:text-brand-500 transition-colors" data-i18n="nav-about">Tentang Saya</a>
+                    <a href="#portfolio" class="hover:text-brand-500 transition-colors" data-i18n="nav-portfolio">Portofolio</a>
+                    <a href="mailto:mfullstack.creative@gmail.com" class="hover:text-brand-500 transition-colors" data-i18n="nav-contact">Kontak</a>
+                </nav>
+                <!-- Language Toggle Buttons -->
+                <div class="magnetic flex items-center bg-white/50 backdrop-blur-sm rounded-full p-1 border border-zinc-200">
+                    <button id="lang-id" onclick="setLanguage('id')" class="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-full transition-all bg-brand-500 text-white shadow-sm cursor-pointer">
+                        ID
+                    </button>
+                    <button id="lang-en" onclick="setLanguage('en')" class="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-full transition-all text-zinc-400 hover:text-zinc-800 bg-transparent cursor-pointer">
+                        EN
+                    </button>
                 </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-8 font-display">
-                        <a href="#home" class="text-zinc-500 hover:text-zinc-900 transition-colors px-2 py-2 text-sm font-medium tracking-wide">Beranda</a>
-                        <a href="#experience" class="text-zinc-500 hover:text-zinc-900 transition-colors px-2 py-2 text-sm font-medium tracking-wide">Profil</a>
-                        <a href="#portfolio" class="text-zinc-500 hover:text-zinc-900 transition-colors px-2 py-2 text-sm font-medium tracking-wide">Karya Visual</a>
-                        <a href="#automation" class="text-zinc-500 hover:text-brand-500 transition-colors px-2 py-2 text-sm font-medium tracking-wide">Sistem Web</a>
-                    </div>
-                </div>
+                <button class="md:hidden text-xl ml-2" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
             </div>
         </div>
-    </nav>
+    </header>
 
     <!-- Hero Section -->
-    <section id="home" class="pt-36 pb-20 md:pt-48 md:pb-32 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto flex flex-col md:flex-row items-center">
-        <div class="md:w-3/5 pr-0 md:pr-12">
-            <div class="inline-flex items-center px-3 py-1 rounded-full border border-brand-500 bg-brand-50 text-xs font-display font-bold text-brand-500 mb-6 tracking-widest uppercase">
-                Creative Technologist
+    <section id="about" class="min-h-screen flex items-center px-6 pt-20 relative overflow-hidden">
+        <!-- Dynamic Ambient Blobs -->
+        <div class="absolute top-1/4 left-10 w-72 h-72 md:w-96 md:h-96 bg-brand-500/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-float pointer-events-none"></div>
+        <div class="absolute bottom-1/4 right-10 w-72 h-72 md:w-96 md:h-96 bg-zinc-300/40 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-float-delayed pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto w-full relative z-10">
+            <div class="reveal">
+                <span class="text-brand-500 font-bold tracking-[0.4em] text-[10px] uppercase mb-8 block" data-i18n="hero-location">Berdasarkan di Semarang, Jawa Tengah</span>
+                <h1 class="text-6xl md:text-[8rem] font-display font-bold leading-[0.9] tracking-tighter mb-12">
+                    Creative <br>
+                    <span class="italic text-zinc-300">Technologist.</span> <br>
+                    Handi <span class="text-brand-500">Purnawan.</span>
+                </h1>
             </div>
-            <h1 class="text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight mb-6 leading-[1.1] text-zinc-900">
-                Solusi visual presisi, <br>
-                didukung <span class="gradient-text italic">sistem.</span>
-            </h1>
-            <p class="text-zinc-600 text-lg md:text-xl mb-10 max-w-2xl leading-relaxed font-light">
-                Menghasilkan karya desain dan video yang detail secara visual, sekaligus membangun sistem web agar alur kerja bisnis Anda berjalan lebih cepat tanpa batas manual.
-            </p>
-            <div class="flex flex-wrap gap-4 font-display">
-                <!-- Flat button design -->
-                <a href="#portfolio" class="bg-zinc-900 hover:bg-brand-500 text-white font-medium py-3.5 px-8 rounded-full transition-colors duration-300 flex items-center border border-zinc-900 hover:border-brand-500">
-                    Lihat Portofolio <i class="fas fa-arrow-right ml-2 text-sm"></i>
-                </a>
-                <a href="#experience" class="bg-transparent hover:bg-zinc-100 text-zinc-900 font-medium py-3.5 px-8 rounded-full transition-colors duration-300 border border-zinc-300 flex items-center">
-                    Baca Profil
-                </a>
-            </div>
-        </div>
-        <div class="md:w-2/5 mt-16 md:mt-0 flex justify-center">
-            <!-- Frame Nyeni untuk foto profil (Flat style) -->
-            <div class="relative">
-                <div class="w-64 h-80 md:w-80 md:h-[400px] rounded-3xl bg-surface-100 border-2 border-zinc-900 flex items-center justify-center overflow-hidden">
-                    <!-- Ganti icon ini dengan Tag <img> foto Anda -->
-                    <i class="fas fa-user-astronaut text-7xl text-zinc-300"></i>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Profil & Pengalaman -->
-    <section id="experience" class="py-24 bg-white border-y border-zinc-200">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-16 md:flex md:justify-between md:items-end border-b border-zinc-200 pb-8">
-                <div class="max-w-2xl">
-                    <h2 class="text-4xl font-display font-bold text-zinc-900 mb-4">Profil Eksekutor Visual.</h2>
-                    <p class="text-zinc-500 text-lg">Mengintegrasikan produksi kreatif visual (Desain & 3D) dengan efisiensi sistem teknologi secara selaras.</p>
-                </div>
-                <div class="mt-8 md:mt-0">
-                    <!-- Padding diperbesar (p-6) dan Jarak ikon ke teks dijauhkan (gap-6) -->
-                    <div class="p-6 bg-brand-50 rounded-2xl border border-brand-500 flex items-center gap-6">
-                        <i class="fas fa-certificate text-brand-500 text-4xl"></i>
-                        <div>
-                            <h4 class="font-display font-bold text-zinc-900 text-base">CSWP Certified</h4>
-                            <p class="text-sm text-brand-600 mt-1">Dassault Systèmes</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                <!-- Kolom Pengalaman Kerja -->
-                <div class="lg:col-span-7 space-y-8">
-                    <!-- Pengalaman Awal (2013 - 2024) -->
-                    <div class="group relative">
-                        <div class="absolute -left-4 top-0 w-1 h-full bg-zinc-200 group-hover:bg-brand-500 transition-colors duration-300"></div>
-                        
-                        <div class="pl-4">
-                            <span class="text-brand-500 font-display font-bold text-sm tracking-widest uppercase mb-1 block">PT ARVIA JAYA; 2013 - 2024</span>
-                            <h3 class="text-2xl font-display font-bold text-zinc-900 mb-6">IT Desainer Grafis</h3>
-                            
-                            <div class="space-y-8 text-zinc-600">
-                                <!-- Kategori 1 -->
-                                <div>
-                                    <h4 class="font-display font-bold text-zinc-900 mb-4 border-b border-zinc-200 pb-2">Visual Branding & Creative Production</h4>
-                                    <ul class="space-y-4">
-                                        <li class="flex items-start">
-                                            <span class="mt-2 mr-4 w-1.5 h-1.5 bg-zinc-300 group-hover:bg-brand-500 flex-shrink-0 transition-colors"></span>
-                                            <span><strong>Pengembangan Aset Pemasaran & QC:</strong> Mentransformasi konsep kampanye dari tim sales menjadi desain visual presisi untuk media cetak (MMT, X-Banner, Brosur). Memastikan standar kualitas tinggi dan keselarasan identitas perusahaan.</span>
-                                        </li>
-                                        <li class="flex items-start">
-                                            <span class="mt-2 mr-4 w-1.5 h-1.5 bg-zinc-300 group-hover:bg-brand-500 flex-shrink-0 transition-colors"></span>
-                                            <span><strong>Inovasi & Desain Produk:</strong> Merancang desain velg inovatif menggunakan Solidworks sesuai tren terkini, serta mempresentasikannya kepada tim sales untuk memastikan kesesuaian kebutuhan pasar.</span>
-                                        </li>
-                                        <li class="flex items-start">
-                                            <span class="mt-2 mr-4 w-1.5 h-1.5 bg-zinc-300 group-hover:bg-brand-500 flex-shrink-0 transition-colors"></span>
-                                            <span><strong>Produksi Video Pendek:</strong> Memproduksi dan mengedit konten video pendek profesional yang dioptimalkan untuk meningkatkan <i>engagement</i> pada platform promosi digital.</span>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <!-- Kategori 2 -->
-                                <div>
-                                    <h4 class="font-display font-bold text-zinc-900 mb-4 border-b border-zinc-200 pb-2">Strategic Collaboration & Technical Systems</h4>
-                                    <ul class="space-y-4">
-                                        <li class="flex items-start">
-                                            <span class="mt-2 mr-4 w-1.5 h-1.5 bg-zinc-300 group-hover:bg-brand-500 flex-shrink-0 transition-colors"></span>
-                                            <span><strong>Kolaborasi Antar Departemen:</strong> Bertindak sebagai mitra visual dalam diskusi strategis bersama tim sales, memberikan masukan kreatif, serta mengeksekusi ide menjadi materi promosi tepat sasaran.</span>
-                                        </li>
-                                        <li class="flex items-start">
-                                            <span class="mt-2 mr-4 w-1.5 h-1.5 bg-zinc-300 group-hover:bg-brand-500 flex-shrink-0 transition-colors"></span>
-                                            <span><strong>Optimasi Alur Kerja:</strong> Mengintegrasikan teknologi AI dan otomatisasi untuk mempercepat proses produksi kreatif dengan tetap menjaga presisi dan detail pada setiap hasil desain.</span>
-                                        </li>
-                                        <li class="flex items-start">
-                                            <span class="mt-2 mr-4 w-1.5 h-1.5 bg-zinc-300 group-hover:bg-brand-500 flex-shrink-0 transition-colors"></span>
-                                            <span><strong>Dukungan Infrastruktur Teknis:</strong> Mengelola pemeliharaan perangkat keras serta memberikan dukungan teknis (<i>troubleshooting</i>) secara langsung maupun <i>remote</i> untuk menjamin kelancaran operasional.</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pengalaman Sekarang (2024 - Sekarang) -->
-                    <div class="group relative mt-12">
-                        <div class="absolute -left-4 top-0 w-1 h-full bg-zinc-200 group-hover:bg-brand-500 transition-colors duration-300"></div>
-                        
-                        <div class="pl-4">
-                            <span class="text-brand-500 font-display font-bold text-sm tracking-widest uppercase mb-1 block">PT SUMBER HARAPAN MITRA PERKASA &bull; 2024 - Sekarang</span>
-                            <h3 class="text-2xl font-display font-bold text-zinc-900 mb-6">Creative Technologist</h3>
-                            
-                            <ul class="space-y-6 text-zinc-600">
-                                <li class="flex items-start">
-                                    <span class="mt-1.5 mr-4 w-2 h-2 bg-zinc-300 group-hover:bg-brand-500 flex-shrink-0 transition-colors"></span>
-                                    <span><strong class="text-zinc-900">Visual Production:</strong> Mengolah konsep kampanye dari tim sales menjadi desain siap cetak (MMT, X-Banner, Brosur) dan konten promosi digital yang presisi dan tajam.</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="mt-1.5 mr-4 w-2 h-2 bg-zinc-300 group-hover:bg-brand-500 flex-shrink-0 transition-colors"></span>
-                                    <span><strong class="text-zinc-900">Video & Sinematografi:</strong> Menangani proses ideasi, pengambilan gambar, hingga pengeditan video pendek profesional untuk kebutuhan media sosial secara mandiri.</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="mt-1.5 mr-4 w-2 h-2 bg-zinc-300 group-hover:bg-brand-500 flex-shrink-0 transition-colors"></span>
-                                    <span><strong class="text-zinc-900">Technical Support & System:</strong> Merancang website fungsional (Sistem BOP & E-Voucher) berbasis AI, serta mengelola pemeliharaan <i>hardware</i> operasional.</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Kolom Keahlian Spesifik (Flat design tags) -->
-                <div class="lg:col-span-5 bg-surface-100 p-8 rounded-3xl border border-zinc-200">
-                    <h3 class="text-xl font-display font-bold text-zinc-900 mb-6">Stack & Tools</h3>
-                    
-                    <div class="mb-8">
-                        <h4 class="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-4">Desain & 3D</h4>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-4 py-2 bg-white text-zinc-800 rounded-lg text-sm font-medium border border-zinc-300">Photoshop</span>
-                            <span class="px-4 py-2 bg-white text-zinc-800 rounded-lg text-sm font-medium border border-zinc-300">Premiere Pro</span>
-                            <span class="px-4 py-2 bg-white text-zinc-800 rounded-lg text-sm font-medium border border-zinc-300">Figma</span>
-                            <span class="px-4 py-2 bg-zinc-900 text-white rounded-lg text-sm font-medium border border-zinc-900">Solidworks</span>
-                            <span class="px-4 py-2 bg-white text-zinc-800 rounded-lg text-sm font-medium border border-zinc-300">SketchUp</span>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 class="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-4">Web & Otomatisasi</h4>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-4 py-2 bg-white text-zinc-800 rounded-lg text-sm font-medium border border-zinc-300">PHP / Laravel</span>
-                            <span class="px-4 py-2 bg-brand-50 text-brand-600 rounded-lg border border-brand-500 text-sm font-medium">Apps Script (GAS)</span>
-                            <span class="px-4 py-2 bg-white text-zinc-800 rounded-lg text-sm font-medium border border-zinc-300">HTML / CSS</span>
-                            <span class="px-4 py-2 bg-white text-zinc-800 rounded-lg text-sm font-medium border border-zinc-300">AI Prompting</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Galeri Karya -->
-    <section id="portfolio" class="py-24">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-display font-bold text-zinc-900 mb-6">Arsip <span class="gradient-text">Visual.</span></h2>
-                <p class="text-zinc-500 max-w-2xl mx-auto text-lg font-light">Bukti nyata eksekusi estetik dari gambar teknis hingga materi pemasaran. Klik untuk memperbesar karya.</p>
-            </div>
-
-            <!-- Grid Galeri (Flat without shadow) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
-                
-                <div class="gallery-item bg-surface-100 h-80 rounded-2xl" onclick="openModal('https://images.unsplash.com/photo-1626785776965-4c5151cbb00f?q=80&w=1470&auto=format&fit=crop', 'Desain Pemasaran', 'Brosur & MMT Promosi')">
-                    <img src="https://images.unsplash.com/photo-1626785776965-4c5151cbb00f?q=80&w=1470&auto=format&fit=crop" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0" alt="Desain Promosi">
-                    <div class="gallery-overlay absolute inset-0 flex flex-col justify-end p-6">
-                        <span class="text-brand-400 font-display text-xs font-bold uppercase tracking-widest mb-2">Photoshop</span>
-                        <h3 class="text-white font-display font-bold text-xl">Brosur & MMT</h3>
-                    </div>
-                </div>
-
-                <div class="gallery-item bg-surface-100 h-80 lg:col-span-2 rounded-2xl" onclick="openModal('https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1470&auto=format&fit=crop', 'Pemodelan 3D Velg', 'Solidworks')">
-                    <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1470&auto=format&fit=crop" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0" alt="Solidworks 3D">
-                    <div class="gallery-overlay absolute inset-0 flex flex-col justify-end p-6">
-                        <span class="text-brand-400 font-display text-xs font-bold uppercase tracking-widest mb-2">Inovasi Produk</span>
-                        <h3 class="text-white font-display font-bold text-2xl">Pemodelan 3D Velg (Solidworks)</h3>
-                    </div>
-                </div>
-
-                <div class="gallery-item bg-surface-100 h-80 rounded-2xl" onclick="openModal('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1364&auto=format&fit=crop', 'Konten Media Sosial', 'Aset Digital & Feed Instagram')">
-                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1364&auto=format&fit=crop" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0" alt="Konten Medsos">
-                    <div class="gallery-overlay absolute inset-0 flex flex-col justify-end p-6">
-                        <span class="text-brand-400 font-display text-xs font-bold uppercase tracking-widest mb-2">UI/UX & Digital</span>
-                        <h3 class="text-white font-display font-bold text-xl">Aset Digital & Feed IG</h3>
-                    </div>
-                </div>
-
-                <div class="gallery-item bg-surface-100 h-80 rounded-2xl" onclick="openModal('https://images.unsplash.com/photo-1542744094-3a31f272c490?q=80&w=1470&auto=format&fit=crop', 'Identitas Perusahaan', 'Desain X-Banner Acara Sales')">
-                    <img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?q=80&w=1470&auto=format&fit=crop" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0" alt="X-Banner">
-                    <div class="gallery-overlay absolute inset-0 flex flex-col justify-end p-6">
-                        <span class="text-brand-400 font-display text-xs font-bold uppercase tracking-widest mb-2">Cetak & Pemasaran</span>
-                        <h3 class="text-white font-display font-bold text-xl">Desain X-Banner Sales</h3>
-                    </div>
-                </div>
-
-                 <div class="gallery-item bg-surface-100 h-80 rounded-2xl" onclick="openModal('https://images.unsplash.com/photo-1503328427499-d92d1fa3ca1c?q=80&w=1470&auto=format&fit=crop', 'Gambar Teknis', 'Desain Struktural SketchUp')">
-                    <img src="https://images.unsplash.com/photo-1503328427499-d92d1fa3ca1c?q=80&w=1470&auto=format&fit=crop" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0" alt="Struktur">
-                    <div class="gallery-overlay absolute inset-0 flex flex-col justify-end p-6">
-                        <span class="text-brand-400 font-display text-xs font-bold uppercase tracking-widest mb-2">Gambar Teknis</span>
-                        <h3 class="text-white font-display font-bold text-xl">Desain Struktural (SketchUp)</h3>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bagian Video (Flat Style) -->
-            <div class="border-t border-zinc-200 pt-20">
-                <div class="flex flex-col md:flex-row justify-between items-end mb-10">
-                    <div>
-                        <h2 class="text-3xl font-display font-bold text-zinc-900">Produksi <span class="text-brand-500">Video.</span></h2>
-                        <p class="text-zinc-500 mt-2">Visual storytelling dari proses syuting hingga pengeditan akhir.</p>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Video 1 -->
-                    <div class="group cursor-pointer">
-                        <div class="aspect-[4/5] bg-zinc-100 rounded-2xl border border-zinc-200 relative overflow-hidden mb-5">
-                            <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=1471&auto=format&fit=crop" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" alt="Thumbnail">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <!-- Tombol Play Flat -->
-                                <div class="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center text-white text-xl border-2 border-transparent group-hover:bg-brand-500 group-hover:border-white transition-all">
-                                    <i class="fas fa-play ml-1"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <h3 class="text-lg font-display font-bold text-zinc-900 mb-1 group-hover:text-brand-500 transition-colors">Kampanye Peluncuran Produk</h3>
-                        <p class="text-zinc-500 text-sm">Sinematik & Editing (Premiere Pro)</p>
-                    </div>
-
-                    <!-- Video 2 -->
-                    <div class="group cursor-pointer">
-                        <div class="aspect-[4/5] bg-zinc-100 rounded-2xl border border-zinc-200 relative overflow-hidden mb-5">
-                            <img src="https://images.unsplash.com/photo-1536240478700-b869070f9279?q=80&w=1600&auto=format&fit=crop" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" alt="Thumbnail">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center text-white text-xl border-2 border-transparent group-hover:bg-brand-500 group-hover:border-white transition-all">
-                                    <i class="fas fa-play ml-1"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <h3 class="text-lg font-display font-bold text-zinc-900 mb-1 group-hover:text-brand-500 transition-colors">Konten Interaktif (Reels)</h3>
-                        <p class="text-zinc-500 text-sm">Fast-paced Editing (Capcut)</p>
-                    </div>
-
-                    <!-- Video 3 -->
-                    <div class="group cursor-pointer">
-                        <div class="aspect-[4/5] bg-zinc-100 rounded-2xl border border-zinc-200 relative overflow-hidden mb-5">
-                            <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=1470&auto=format&fit=crop" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" alt="Thumbnail">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center text-white text-xl border-2 border-transparent group-hover:bg-brand-500 group-hover:border-white transition-all">
-                                    <i class="fas fa-play ml-1"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <h3 class="text-lg font-display font-bold text-zinc-900 mb-1 group-hover:text-brand-500 transition-colors">Dokumentasi B-Roll Acara</h3>
-                        <p class="text-zinc-500 text-sm">Event Coverage & Archiving</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Sistem Web & Automasi -->
-    <section id="automation" class="py-24 bg-zinc-900 text-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-20">
-                <h2 class="text-4xl font-display font-bold mb-4">Sisi <span class="text-brand-500">Technologist.</span></h2>
-                <p class="text-zinc-400 max-w-2xl mx-auto text-lg font-light">Membangun web dan otomatisasi untuk menyederhanakan alur kerja administratif.</p>
-            </div>
-
-            <!-- Menambahkan items-stretch agar tinggi grid sama -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
-                <!-- Card 1 (Ditambahkan flex flex-col h-full) -->
-                <div class="bg-zinc-900 p-10 rounded-3xl border-2 border-zinc-700 hover:border-brand-500 transition-colors duration-300 flex flex-col h-full">
-                    <div class="flex items-center mb-8">
-                        <div class="w-14 h-14 rounded-2xl bg-zinc-800 flex items-center justify-center text-2xl mr-5 border border-zinc-600 flex-shrink-0">
-                            <i class="fas fa-robot text-white"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-display font-bold">Website Sistem BOP</h3>
-                            <p class="text-brand-400 font-medium text-sm mt-1">AI-Assisted Development, Web Tech</p>
-                        </div>
-                    </div>
-                    <!-- Ditambahkan flex-grow agar paragraf mengisi sisa ruang kosong -->
-                    <p class="text-zinc-300 mb-8 leading-relaxed font-light flex-grow">
-                        Memanfaatkan kapabilitas AI (AI-Prompting) secara optimal untuk memprogram dan membangun ekosistem digital terpusat sistem Biaya Operasional Perusahaan (BOP). Solusi efisien yang sukses menggantikan pencatatan konvensional.
+            
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-end reveal" style="transition-delay: 200ms;">
+                <div class="md:col-span-7">
+                    <p class="text-xl md:text-2xl text-zinc-500 leading-relaxed font-light max-w-2xl" data-i18n="hero-desc">
+                        Desainer multidisiplin yang fokus menghasilkan karya detail secara visual, namun tetap didukung sistem otomatis agar bisnis Anda berjalan lebih cepat.
                     </p>
-                    <!-- Ditambahkan mt-auto agar selalu terdorong ke paling bawah -->
-                    <div class="border-l-2 border-brand-500 pl-4 mt-auto">
-                        <p class="text-xs text-zinc-500 font-bold uppercase tracking-widest mb-1">Dampak Solusi</p>
-                        <p class="text-sm text-zinc-100">Pelacakan dan persetujuan operasional oleh manajemen berjalan sistematis secara real-time.</p>
+                </div>
+                <div class="md:col-span-5 flex md:justify-end">
+                    <a href="#portfolio" class="magnetic group inline-flex items-center gap-6 px-8 py-4 bg-zinc-900 text-white rounded-full hover:bg-brand-500 transition-all">
+                        <span class="text-xs font-bold uppercase tracking-widest" data-i18n="btn-view-portfolio">Lihat Portofolio</span>
+                        <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:rotate-45 transition-transform">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hard Skills / Tools -->
+    <section class="py-20 px-6 border-y border-zinc-100 bg-zinc-50/50">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 reveal">
+                <div>
+                    <h4 class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-5" data-i18n="skill-design">Desain Kreatif</h4>
+                    <div class="flex flex-wrap gap-3">
+                        <div class="flex items-center gap-2 bg-white border border-zinc-200 px-3 py-2 rounded-lg shadow-sm">
+                            <i class="devicon-photoshop-plain colored text-lg"></i>
+                            <span class="text-xs font-bold text-zinc-700">Photoshop</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white border border-zinc-200 px-3 py-2 rounded-lg shadow-sm">
+                            <i class="devicon-figma-plain colored text-lg"></i>
+                            <span class="text-xs font-bold text-zinc-700">Figma</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white border border-zinc-200 px-3 py-2 rounded-lg shadow-sm">
+                            <i class="devicon-canva-original colored text-lg"></i>
+                            <span class="text-xs font-bold text-zinc-700">Canva</span>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Card 2 (Ditambahkan flex flex-col h-full) -->
-                <div class="bg-zinc-900 p-10 rounded-3xl border-2 border-zinc-700 hover:border-brand-500 transition-colors duration-300 flex flex-col h-full">
-                    <div class="flex items-center mb-8">
-                        <div class="w-14 h-14 rounded-2xl bg-zinc-800 flex items-center justify-center text-2xl mr-5 border border-zinc-600 flex-shrink-0">
-                            <i class="fab fa-google text-white"></i>
+                <div>
+                    <h4 class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-5" data-i18n="skill-video">Videografi</h4>
+                    <div class="flex flex-wrap gap-3">
+                        <div class="flex items-center gap-2 bg-white border border-zinc-200 px-3 py-2 rounded-lg shadow-sm">
+                            <i class="devicon-premierepro-plain colored text-lg"></i>
+                            <span class="text-xs font-bold text-zinc-700">Premiere Pro</span>
                         </div>
-                        <div>
-                            <h3 class="text-2xl font-display font-bold">Otomatisasi E-Voucher</h3>
-                            <p class="text-brand-400 font-medium text-sm mt-1">Google Apps Script (GAS) & AI</p>
+                        <div class="flex items-center gap-2 bg-white border border-zinc-200 px-3 py-2 rounded-lg shadow-sm">
+                            <i class="fas fa-video text-zinc-800 text-sm"></i>
+                            <span class="text-xs font-bold text-zinc-700">Capcut</span>
                         </div>
                     </div>
-                    <!-- Ditambahkan flex-grow agar paragraf mengisi sisa ruang kosong -->
-                    <p class="text-zinc-300 mb-8 leading-relaxed font-light flex-grow">
-                        Mengembangkan sistem otomatisasi berbasis skrip menggunakan GAS dan logika AI untuk mendistribusikan, memvalidasi, dan mengelola arus data E-Voucher.
-                    </p>
-                    <!-- Ditambahkan mt-auto agar selalu terdorong ke paling bawah -->
-                    <div class="border-l-2 border-brand-500 pl-4 mt-auto">
-                        <p class="text-xs text-zinc-500 font-bold uppercase tracking-widest mb-1">Dampak Solusi</p>
-                        <p class="text-sm text-zinc-100">Memangkas jam kerja manual staf admin harian dan mengeliminasi 100% risiko <i>human error</i>.</p>
+                </div>
+                <div>
+                    <h4 class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-5" data-i18n="skill-3d">Pemodelan 3D</h4>
+                    <div class="flex flex-wrap gap-3">
+                        <div class="flex items-center gap-2 bg-white border border-zinc-200 px-3 py-2 rounded-lg shadow-sm">
+                            <i class="devicon-solidworks-plain colored text-lg"></i>
+                            <span class="text-xs font-bold text-zinc-700">Solidworks</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-brand-50 border border-brand-200 px-3 py-2 rounded-lg shadow-sm">
+                            <i class="fas fa-award text-brand-500 text-sm"></i>
+                            <span class="text-xs font-bold text-brand-600">CSWP Certified</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-5" data-i18n="skill-tech">Teknologi Web & AI</h4>
+                    <div class="flex flex-wrap gap-3">
+                        <div class="flex items-center gap-2 bg-white border border-zinc-200 px-3 py-2 rounded-lg shadow-sm">
+                            <i class="fas fa-robot text-brand-500 text-sm"></i>
+                            <span class="text-xs font-bold text-zinc-700">AI Prompting</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white border border-zinc-200 px-3 py-2 rounded-lg shadow-sm">
+                            <i class="devicon-php-plain colored text-lg"></i>
+                            <i class="devicon-laravel-original colored text-lg"></i>
+                            <span class="text-xs font-bold text-zinc-700">PHP / Laravel</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white border border-zinc-200 px-3 py-2 rounded-lg shadow-sm">
+                            <i class="fab fa-google text-blue-500 text-sm"></i>
+                            <span class="text-xs font-bold text-zinc-700">Apps Script</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer Estetik -->
-    <footer class="bg-zinc-950 py-16 text-center border-t border-zinc-800">
-        <div class="max-w-4xl mx-auto px-4">
-            <h2 class="text-3xl font-display font-bold mb-8 text-white">Siap berkolaborasi.</h2>
-            <div class="flex justify-center space-x-6 mb-12">
-                <!-- Flat Icon Buttons -->
-                <a href="#" class="w-12 h-12 rounded-full border border-zinc-700 flex items-center justify-center text-zinc-400 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition-all duration-300"><i class="fab fa-linkedin-in text-xl"></i></a>
-                <a href="#" class="w-12 h-12 rounded-full border border-zinc-700 flex items-center justify-center text-zinc-400 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition-all duration-300"><i class="fas fa-envelope text-xl"></i></a>
-                <a href="#" class="w-12 h-12 rounded-full border border-zinc-700 flex items-center justify-center text-zinc-400 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition-all duration-300"><i class="fab fa-whatsapp text-xl"></i></a>
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Filter Bar -->
+            <div class="flex flex-wrap items-center gap-10 mb-24 reveal">
+                <button onclick="filterPortfolio('all')" class="filter-btn active py-2 text-xs font-bold uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity" data-i18n="filter-all">Semua Karya</button>
+                <button onclick="filterPortfolio('visual')" class="filter-btn py-2 text-xs font-bold uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity" data-i18n="filter-visual">Visual & Video</button>
+                <button onclick="filterPortfolio('3d')" class="filter-btn py-2 text-xs font-bold uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity" data-i18n="filter-3d">3D & Teknis</button>
+                <button onclick="filterPortfolio('system')" class="filter-btn py-2 text-xs font-bold uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity" data-i18n="filter-system">Sistem Web</button>
             </div>
-            <p class="text-zinc-600 text-sm font-light">
-                &copy; 2026 Crafted with code by Creative Technologist.
-            </p>
+
+            <!-- Balanced Symmetrical Grid -->
+            <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-24">
+                
+                <!-- Project Item 1 (Visual) -->
+                <div class="portfolio-item reveal" data-category="visual">
+                    <div class="hidden modal-details">
+                        <span class="modal-title-data" data-i18n="port-1-modal-title">Desain Materi Promosi</span>
+                        <span class="modal-desc-data" data-i18n="port-1-modal-desc">Pembuatan aset desain untuk kebutuhan promosi. Menggunakan Photoshop untuk memberikan sentuhan detail visual yang presisi (seperti manipulasi foto), dipadukan dengan Canva untuk memastikan produksi konten media sosial harian berjalan cepat dan efisien tanpa menurunkan kualitas.</span>
+                    </div>
+                    <!-- Ganti path ./assets/images/portfolio-visual.jpg dengan gambar yang Anda inginkan -->
+                    <div class="img-container-hover relative aspect-[4/5] bg-zinc-100 overflow-hidden group cursor-pointer" onclick="openModal('./assets/images/portfolio-visual.jpg', this)">
+                        <img src="./assets/images/portfolio-visual.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Visual Assets" onerror="this.src='https://images.unsplash.com/photo-1626785776965-4c5151cbb00f?q=80&w=1470'">
+                        <div class="absolute inset-0 bg-brand-500/0 group-hover:bg-brand-500/10 transition-all flex items-center justify-center">
+                            <div class="opacity-0 group-hover:opacity-100 bg-white text-black px-6 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest translate-y-4 group-hover:translate-y-0 transition-all"><span data-i18n="btn-detail">Lihat Detail</span></div>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <h3 class="text-3xl font-display font-bold mb-4 tracking-tight" data-i18n="port-1-title">Desain Promosi & Media Sosial</h3>
+                        <p class="text-zinc-500 font-light max-w-sm mb-6" data-i18n="port-1-desc">Pembuatan materi promosi cetak dan digital menggunakan <b>Photoshop</b> untuk detail tinggi, dan <b>Canva</b> untuk pekerjaan yang cepat.</p>
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-500">PHOTOSHOP &bull; CANVA &bull; FIGMA</span>
+                    </div>
+                </div>
+
+                <!-- Project Item 2 (3D) -->
+                <div class="portfolio-item reveal" data-category="3d">
+                    <div class="hidden modal-details">
+                        <span class="modal-title-data" data-i18n="port-2-modal-title">Inovasi Desain Velg 3D</span>
+                        <span class="modal-desc-data" data-i18n="port-2-modal-desc">Membuat pemodelan 3D velg mobil yang inovatif menggunakan perangkat lunak Solidworks. Desain ini dibuat presisi agar siap untuk tahapan produksi pabrik.</span>
+                    </div>
+                    <div class="img-container-hover relative aspect-[4/5] bg-zinc-100 overflow-hidden group cursor-pointer" onclick="openModal('./assets/images/portfolio-3dvelg.jpg', this)">
+                        <img src="./assets/images/portfolio-3d.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="3D Wheel Design" onerror="this.src='https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1470'">
+                        <div class="absolute inset-0 bg-brand-500/0 group-hover:bg-brand-500/10 transition-all flex items-center justify-center">
+                            <div class="opacity-0 group-hover:opacity-100 bg-white text-black px-6 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest translate-y-4 group-hover:translate-y-0 transition-all"><span data-i18n="btn-detail">Lihat Detail</span></div>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <h3 class="text-3xl font-display font-bold mb-4 tracking-tight" data-i18n="port-2-title">Desain Velg 3D (Solidworks)</h3>
+                        <p class="text-zinc-500 font-light max-w-sm mb-6" data-i18n="port-2-desc">Merancang gambar teknik dan bentuk 3D velg kendaraan yang akurat dan siap diproduksi secara massal.</p>
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-500">SOLIDWORKS &bull; CSWP CERTIFIED</span>
+                    </div>
+                </div>
+
+                <!-- Project Item 3 (System) -->
+                <div class="portfolio-item reveal" data-category="system">
+                    <div class="hidden modal-details">
+                        <span class="modal-title-data" data-i18n="port-3-modal-title">Website Sistem BOP & E-Garansi</span>
+                        <span class="modal-desc-data" data-i18n="port-3-modal-desc">Fokus pada pembuatan dan pengembangan website yang dilengkapi dengan menu integrasi E-Garansi untuk layanan pelanggan. Proses pengerjaan kode dibantu oleh AI agar lebih efisien dan stabil.</span>
+                    </div>
+                    <div class="img-container-hover relative aspect-[4/5] bg-zinc-100 overflow-hidden group cursor-pointer" onclick="openModal('./assets/images/portfolio-web.jpg', this)">
+                        <img src="./assets/images/portfolio-web.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Visual Assets" onerror="this.src='https://images.unsplash.com/photo-1626785776965-4c5151cbb00f?q=80&w=1470'">
+                        <div class="absolute inset-0 bg-brand-500/0 group-hover:bg-brand-500/10 transition-all flex items-center justify-center">
+                            <div class="opacity-0 group-hover:opacity-100 bg-white text-black px-6 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest translate-y-4 group-hover:translate-y-0 transition-all"><span data-i18n="btn-detail">Lihat Detail</span></div>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <h3 class="text-3xl font-display font-bold mb-4 tracking-tight" data-i18n="port-3-title">Website Sistem BOP & E-Garansi</h3>
+                        <p class="text-zinc-500 font-light max-w-sm mb-6" data-i18n="port-3-desc">Pembuatan website fungsional khusus untuk sistem Biaya Operasional (BOP) dan integrasi E-Garansi sesuai kebutuhan perusahaan.</p>
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-500">PHP LARAVEL &bull; AI IMPLEMENTATION</span>
+                    </div>
+                </div>
+
+                <!-- Project Item 4 (System) -->
+                <div class="portfolio-item reveal" data-category="system">
+                    <div class="hidden modal-details">
+                        <span class="modal-title-data" data-i18n="port-4-modal-title">Sistem Otomatis E-Voucher</span>
+                        <span class="modal-desc-data" data-i18n="port-4-modal-desc">Mengganti cara kerja manual yang rentan salah ketik menjadi sistem otomatis. Sistem ini bertugas mendistribusikan voucher digital ke pelanggan menggunakan kode Google Apps Script secara otomatis.</span>
+                    </div>
+                    <div class="img-container-hover relative aspect-[4/5] bg-zinc-100 overflow-hidden group cursor-pointer" onclick="openModal('./assets/images/portfolio-evoucher.jpg', this)">
+                        <img src="./assets/images/portfolio-evoucher.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Visual Assets" onerror="this.src='https://images.unsplash.com/photo-1626785776965-4c5151cbb00f?q=80&w=1470'">
+                        <div class="absolute inset-0 bg-brand-500/0 group-hover:bg-brand-500/10 transition-all flex items-center justify-center">
+                            <div class="opacity-0 group-hover:opacity-100 bg-white text-black px-6 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest translate-y-4 group-hover:translate-y-0 transition-all"><span data-i18n="btn-detail">Lihat Detail</span></div>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <h3 class="text-3xl font-display font-bold mb-4 tracking-tight" data-i18n="port-4-title">Sistem Otomatis E-Voucher</h3>
+                        <p class="text-zinc-500 font-light max-w-sm mb-6" data-i18n="port-4-desc">Menciptakan program yang secara otomatis mengirimkan voucher ke pelanggan untuk menghindari salah ketik dari admin.</p>
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-500">GOOGLE SCRIPT &bull; AUTOMATION</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline -->
+    <section class="py-32 px-6 bg-zinc-50">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-display font-bold mb-20 reveal" data-i18n="exp-title">Pengalaman Profesional.</h2>
+            <div class="space-y-24">
+                <div class="reveal">
+                    <span class="text-brand-500 font-bold uppercase tracking-widest text-[10px]" data-i18n="exp-date-1">2024 — Sekarang</span>
+                    <h3 class="text-3xl font-display font-bold mt-2">Creative Technologist</h3>
+                    <p class="text-zinc-400 mt-1 uppercase text-xs font-bold tracking-widest">PT Sumber Harapan Mitra Perkasa</p>
+                    <p class="text-zinc-500 mt-6 max-w-2xl leading-relaxed" data-i18n="exp-desc-1">Bertanggung jawab penuh atas kualitas desain pemasaran perusahaan, merangkap pekerjaan IT dengan membuat website sistem operasional (BOP) dan otomasi voucher agar proses bisnis berjalan ringkas.</p>
+                </div>
+                <div class="reveal">
+                    <span class="text-zinc-400 font-bold uppercase tracking-widest text-[10px]">2013 — 2024</span>
+                    <h3 class="text-3xl font-display font-bold mt-2">IT Desainer Grafis</h3>
+                    <p class="text-zinc-400 mt-1 uppercase text-xs font-bold tracking-widest">PT Arvia Jaya</p>
+                    <p class="text-zinc-500 mt-6 max-w-2xl leading-relaxed" data-i18n="exp-desc-2">Berpengalaman lebih dari 10 tahun dalam menjaga identitas visual perusahaan, mulai dari merancang brosur, membuat pemodelan 3D velg kendaraan, hingga memberikan dukungan IT ringan (troubleshooting komputer, printer, telepon, dan perbaikan remote).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-40 bg-zinc-950 text-white overflow-hidden relative">
+        <div class="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+            <div class="text-[20vw] font-display font-bold tracking-tighter whitespace-nowrap -translate-x-20">CREATIVE TECHNOLOGIST</div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+                <div>
+                    <h2 class="text-5xl md:text-7xl font-display font-bold tracking-tighter mb-12" data-i18n="footer-title">Siap berkolaborasi <br> bersama Anda.</h2>
+                    <a href="mailto:mfullstack.creative@gmail.com" class="text-2xl md:text-4xl font-light hover:text-brand-500 transition-colors border-b border-white/20 pb-2">mfullstack.creative@gmail.com</a>
+                </div>
+                <div class="flex flex-col md:items-end gap-8">
+                    <div class="text-right">
+                        <p class="text-zinc-400 text-xs uppercase tracking-widest mb-2" data-i18n="footer-location">Semarang, Indonesia</p>
+                        <p class="text-sm font-medium">+62 856 258 8978</p>
+                    </div>
+                    <div class="flex gap-10">
+                        <a href="https://www.linkedin.com/in/handi-purnawan" class="magnetic text-xs font-bold uppercase tracking-widest hover:text-brand-500 transition-colors">LinkedIn</a>
+                        <a href="http://instagram.com/handi.p" class="magnetic text-xs font-bold uppercase tracking-widest hover:text-brand-500 transition-colors">Instagram</a>
+                        <a href="http://wa.me/628562588978" class="magnetic text-xs font-bold uppercase tracking-widest hover:text-brand-500 transition-colors">WhatsApp</a>
+                    </div>
+                    <p class="text-zinc-500 text-[10px] uppercase tracking-widest">&copy; 2026 HANDI PURNAWAN. ALL RIGHTS RESERVED.</p>
+                </div>
+            </div>
         </div>
     </footer>
 
-    <!-- MODAL LIGHTBOX (Tanpa Shadow) -->
-    <div id="lightbox" class="fixed inset-0 z-50 bg-zinc-950/95 hidden flex flex-col items-center justify-center opacity-0 transition-opacity duration-400">
-        <button onclick="closeModal()" class="absolute top-6 right-6 text-zinc-500 hover:text-white text-4xl focus:outline-none transition-colors">
+    <!-- REBUILT: Modal Lightbox (Sesuai Referensi Canva image_ee94da.jpg) -->
+    <div id="modal" class="fixed inset-0 z-[100] bg-zinc-100/90 backdrop-blur-md hidden flex flex-col items-center justify-center p-4 md:p-10 opacity-0 transition-opacity duration-500">
+        <!-- Close Button -->
+        <button onclick="closeModal()" class="absolute top-6 right-6 md:top-10 md:right-10 text-zinc-500 hover:text-brand-500 text-3xl hover:scale-110 transition-transform z-10 cursor-pointer">
             <i class="fas fa-times"></i>
         </button>
-        <div class="max-w-5xl w-full px-4 flex flex-col items-center">
-            <!-- Dibuat flat border -->
-            <img id="lightbox-img" src="" alt="Zoomed Image" class="max-h-[85vh] object-contain border border-zinc-800 mb-8 bg-zinc-900 rounded-2xl">
-            <h3 id="lightbox-title" class="text-3xl font-display font-bold text-white mb-2 text-center"></h3>
-            <p id="lightbox-desc" class="text-brand-400 font-medium tracking-wide text-center uppercase text-sm"></p>
+        
+        <!-- Modal Card Content -->
+        <div class="max-w-6xl w-full bg-white rounded-[2.5rem] shadow-2xl p-6 md:p-14 flex flex-col md:flex-row items-center gap-10 md:gap-16">
+            
+            <!-- Left Side: Image (Tidak terpotong / object-contain) -->
+            <div id="modal-img-container" class="w-full md:w-1/2 flex items-center justify-center">
+                <!-- Image will be injected here via JS -->
+            </div>
+            
+            <!-- Right Side: Text & Details -->
+            <div class="w-full md:w-1/2">
+                <span class="text-brand-500 font-bold uppercase tracking-widest text-[10px] mb-4 block" data-i18n="modal-label-detail">Detail Proyek</span>
+                <h3 id="modal-title" class="text-4xl md:text-5xl font-display font-bold mb-6 tracking-tighter leading-tight text-zinc-900"></h3>
+                <p id="modal-desc" class="text-zinc-500 font-light text-lg md:text-xl leading-relaxed"></p>
+                
+                <div class="mt-10">
+                    <a href="mailto:mfullstack.creative@gmail.com" class="inline-block px-8 py-4 bg-zinc-900 text-white rounded-full text-xs font-bold uppercase tracking-widest hover:bg-brand-500 hover:shadow-lg transition-all" data-i18n="modal-btn-discuss">Diskusikan Proyek</a>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
-        const lightboxTitle = document.getElementById('lightbox-title');
-        const lightboxDesc = document.getElementById('lightbox-desc');
+    <!-- Tombol Kembali ke Atas -->
+    <button id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-10 right-10 w-14 h-14 bg-zinc-900 text-white rounded-full flex items-center justify-center opacity-0 translate-y-10 transition-all duration-500 z-[90] hover:bg-brand-500 shadow-2xl cursor-pointer pointer-events-none magnetic">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
-        function openModal(imgSrc, title, desc) { 
-            lightboxImg.src = imgSrc; 
-            lightboxTitle.innerText = title; 
-            lightboxDesc.innerText = desc; 
+    <script>
+        // Language Translation Dictionary
+        const translations = {
+            id: {
+                "nav-about": "Tentang Saya",
+                "nav-portfolio": "Portofolio",
+                "nav-contact": "Kontak",
+                "hero-location": "Berdasarkan di Semarang, Jawa Tengah",
+                "hero-desc": "Desainer multidisiplin yang fokus menghasilkan karya detail secara visual, namun tetap didukung sistem otomatis agar bisnis Anda berjalan lebih cepat.",
+                "btn-view-portfolio": "Lihat Portofolio",
+                "skill-design": "Desain Kreatif",
+                "skill-video": "Videografi",
+                "skill-3d": "Pemodelan 3D",
+                "skill-tech": "Teknologi Web & AI",
+                "filter-all": "Semua Karya",
+                "filter-visual": "Visual & Video",
+                "filter-3d": "3D & Teknis",
+                "filter-system": "Sistem Web",
+                "port-1-title": "Desain Promosi & Media Sosial",
+                "port-1-desc": "Pembuatan materi promosi cetak dan digital menggunakan <b>Photoshop</b> untuk detail tinggi, dan <b>Canva</b> untuk pekerjaan yang cepat.",
+                "port-1-modal-title": "Desain Materi Promosi",
+                "port-1-modal-desc": "Pembuatan aset desain untuk kebutuhan promosi. Menggunakan Photoshop untuk memberikan sentuhan detail visual yang presisi (seperti manipulasi foto), dipadukan dengan Canva untuk memastikan produksi konten media sosial harian berjalan cepat dan efisien tanpa menurunkan kualitas.",
+                "port-2-title": "Desain Velg 3D (Solidworks)",
+                "port-2-desc": "Merancang gambar teknik dan bentuk 3D velg kendaraan yang akurat dan siap diproduksi secara massal.",
+                "port-2-modal-title": "Inovasi Desain Velg 3D",
+                "port-2-modal-desc": "Membuat pemodelan 3D velg mobil yang inovatif menggunakan perangkat lunak Solidworks. Desain ini dibuat presisi agar siap untuk tahapan produksi pabrik.",
+                "port-3-title": "Website Sistem BOP & E-Garansi",
+                "port-3-desc": "Pembuatan website fungsional khusus untuk sistem Biaya Operasional (BOP) dan integrasi E-Garansi sesuai kebutuhan perusahaan.",
+                "port-3-modal-title": "Website Sistem BOP & E-Garansi",
+                "port-3-modal-desc": "Fokus pada pembuatan dan pengembangan website untuk mendigitalisasi pencatatan Biaya Operasional (BOP) harian perusahaan, dilengkapi dengan menu integrasi E-Garansi untuk layanan pelanggan. Proses pengerjaan kode dibantu oleh AI agar lebih efisien dan stabil.",
+                "port-4-title": "Sistem Otomatis E-Voucher",
+                "port-4-desc": "Menciptakan program yang secara otomatis mengirimkan voucher ke pelanggan untuk menghindari salah ketik dari admin.",
+                "port-4-modal-title": "Sistem Otomatis E-Voucher",
+                "port-4-modal-desc": "Mengganti cara kerja manual yang rentan salah ketik menjadi sistem otomatis. Sistem ini bertugas mendistribusikan voucher digital ke pelanggan menggunakan kode Google Apps Script secara otomatis.",
+                "btn-detail": "Lihat Detail",
+                "exp-title": "Pengalaman Profesional.",
+                "exp-date-1": "2024 — Sekarang",
+                "exp-desc-1": "Bertanggung jawab penuh atas kualitas desain pemasaran perusahaan, merangkap pekerjaan IT dengan membuat website sistem operasional (BOP) dan otomasi voucher agar proses bisnis berjalan ringkas.",
+                "exp-desc-2": "Berpengalaman lebih dari 10 tahun dalam menjaga identitas visual perusahaan, mulai dari merancang brosur, membuat pemodelan 3D velg kendaraan, hingga memberikan dukungan IT ringan (troubleshooting komputer, printer, telepon, dan perbaikan remote).",
+                "footer-title": "Siap berkolaborasi <br> bersama Anda.",
+                "footer-location": "Semarang, Indonesia",
+                "modal-label-detail": "Detail Proyek",
+                "modal-btn-discuss": "Diskusikan Proyek"
+            },
+            en: {
+                "nav-about": "About Me",
+                "nav-portfolio": "Portfolio",
+                "nav-contact": "Contact",
+                "hero-location": "Based in Semarang, Central Java",
+                "hero-desc": "Multidisciplinary designer focused on producing visually detailed work, backed by automated systems to make your business run faster and more efficiently.",
+                "btn-view-portfolio": "View Portfolio",
+                "skill-design": "Creative Design",
+                "skill-video": "Videography",
+                "skill-3d": "3D Modeling",
+                "skill-tech": "Web Tech & AI",
+                "filter-all": "All Works",
+                "filter-visual": "Visual & Video",
+                "filter-3d": "3D & Tech",
+                "filter-system": "Web Systems",
+                "port-1-title": "Promotion & Social Media Design",
+                "port-1-desc": "Creating print and digital promotional materials using <b>Photoshop</b> for high detail, and <b>Canva</b> for fast turnaround.",
+                "port-1-modal-title": "Promotional Material Design",
+                "port-1-modal-desc": "Creation of design assets for promotional needs. Utilizing Photoshop for precise visual details (like photo manipulation), combined with Canva to ensure daily social media content production runs quickly and efficiently without compromising quality.",
+                "port-2-title": "3D Wheel Design (Solidworks)",
+                "port-2-desc": "Designing accurate technical drawings and 3D shapes for vehicle wheels ready for mass production.",
+                "port-2-modal-title": "3D Wheel Design Innovation",
+                "port-2-modal-desc": "Creating innovative 3D car wheel models using Solidworks software. The design is precisely made to be ready for the factory production stage.",
+                "port-3-title": "BOP & E-Warranty System Website",
+                "port-3-desc": "Creation of a functional website specifically for the Operational Expense (BOP) system and E-Warranty integration according to company needs.",
+                "port-3-modal-title": "BOP & E-Warranty System Website",
+                "port-3-modal-desc": "Focused on creating and developing a website to digitize the company's daily Operational Expenses (BOP) tracking, equipped with an E-Warranty integration menu for customer service. The coding process was assisted by AI for efficiency and stability.",
+                "port-4-title": "Automated E-Voucher System",
+                "port-4-desc": "Creating a program that automatically sends vouchers to customers to avoid admin typing errors.",
+                "port-4-modal-title": "Automated E-Voucher System",
+                "port-4-modal-desc": "Replacing manual, error-prone workflows with an automated system. This system automatically distributes digital vouchers to customers using Google Apps Script.",
+                "btn-detail": "View Details",
+                "exp-title": "Professional Experience.",
+                "exp-date-1": "2024 — Present",
+                "exp-desc-1": "Fully responsible for the quality of the company's marketing designs, doubling in IT by creating operational system websites (BOP) and voucher automation to streamline business processes.",
+                "exp-desc-2": "Over 10 years of experience maintaining corporate visual identity, from designing brochures, 3D vehicle wheel modeling, to providing light IT support (troubleshooting computers, printers, phones, and remote assistance).",
+                "footer-title": "Ready to collaborate <br> with you.",
+                "footer-location": "Semarang, Indonesia",
+                "modal-label-detail": "Project Details",
+                "modal-btn-discuss": "Discuss Project"
+            }
+        };
+
+        let currentLang = 'id';
+
+        function setLanguage(lang) {
+            if (currentLang === lang) return;
+            currentLang = lang;
             
-            lightbox.classList.remove('hidden');
-            setTimeout(() => {
-                lightbox.classList.remove('opacity-0');
-                lightbox.classList.add('opacity-100');
-            }, 10);
+            const btnId = document.getElementById('lang-id');
+            const btnEn = document.getElementById('lang-en');
+
+            // Update UI styles for buttons
+            if (lang === 'id') {
+                btnId.className = "text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-full transition-all bg-brand-500 text-white shadow-sm cursor-pointer";
+                btnEn.className = "text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-full transition-all text-zinc-400 hover:text-zinc-800 bg-transparent cursor-pointer";
+            } else {
+                btnEn.className = "text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-full transition-all bg-brand-500 text-white shadow-sm cursor-pointer";
+                btnId.className = "text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-full transition-all text-zinc-400 hover:text-zinc-800 bg-transparent cursor-pointer";
+            }
             
+            // Update Document Lang attribute
+            document.documentElement.lang = currentLang;
+
+            // Iterate and Translate
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.innerHTML = translations[currentLang][key];
+                }
+            });
+        }
+
+        // Custom Cursor Logic
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        document.querySelectorAll('a, button, .cursor-pointer').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(4)');
+            el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+        });
+
+        // Scroll Progress, Nav Background, and Back to Top
+        const progressBar = document.getElementById('progress-bar');
+        const mainNav = document.getElementById('main-nav');
+        const backToTopBtn = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + "%";
+
+            if (winScroll > 100) {
+                mainNav.classList.add('bg-white/80', 'backdrop-blur-md', 'py-4', 'shadow-sm');
+                mainNav.classList.remove('py-6');
+            } else {
+                mainNav.classList.remove('bg-white/80', 'backdrop-blur-md', 'py-4', 'shadow-sm');
+                mainNav.classList.add('py-6');
+            }
+            
+            // Back to Top Button Logic
+            if (winScroll > 500) {
+                backToTopBtn.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+                backToTopBtn.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+            } else {
+                backToTopBtn.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+                backToTopBtn.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+            }
+            
+            reveal();
+        });
+
+        // Reveal Animation Logic
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        // Magnetic Effect Logic
+        const magneticEls = document.querySelectorAll('.magnetic');
+        magneticEls.forEach(el => {
+            el.addEventListener('mousemove', function(e) {
+                const pos = el.getBoundingClientRect();
+                const x = e.clientX - pos.left - pos.width / 2;
+                const y = e.clientY - pos.top - pos.height / 2;
+                el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+            el.addEventListener('mouseleave', function() {
+                el.style.transform = 'translate(0px, 0px)';
+            });
+        });
+
+        // Portfolio Filter
+        function filterPortfolio(category) {
+            const items = document.querySelectorAll('.portfolio-item');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'opacity-100');
+                btn.classList.add('opacity-40');
+                if (btn.getAttribute('onclick').includes(category)) {
+                    btn.classList.add('active', 'opacity-100');
+                }
+            });
+
+            items.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    if (category === 'all' || item.getAttribute('data-category') === category) {
+                        item.classList.remove('hidden');
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'scale(1)';
+                        }, 50);
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                }, 400);
+            });
+        }
+
+        // Modal Logic Refactored for Image Aspect Ratio Fix
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
+
+        function openModal(img, element) {
+            const itemContainer = element.closest('.portfolio-item');
+            const titleHtml = itemContainer.querySelector('.modal-title-data').innerHTML;
+            const descHtml = itemContainer.querySelector('.modal-desc-data').innerHTML;
+            
+            const imgContainer = document.getElementById('modal-img-container');
+
+            // Cek apakah data gambar berupa icon (seperti icon-desktop) atau URL gambar sesungguhnya
+            if(img.startsWith('icon-')) {
+                let iconClass = 'fa-image';
+                if(img === 'icon-desktop') iconClass = 'fa-desktop';
+                if(img === 'icon-cogs') iconClass = 'fa-cogs';
+                
+                imgContainer.innerHTML = `<div class="w-full h-64 md:h-full min-h-[300px] flex items-center justify-center text-zinc-300 text-9xl bg-zinc-50 rounded-[2rem] border border-zinc-100 shadow-inner"><i class="fas ${iconClass}"></i></div>`;
+            } else {
+                // Gambar dimuat utuh (object-contain) tanpa pemotongan
+                imgContainer.innerHTML = `<img src="${img}" class="w-full h-auto max-h-[70vh] object-contain rounded-[2rem] shadow-xl border border-zinc-100">`;
+            }
+            
+            modalTitle.innerHTML = titleHtml;
+            modalDesc.innerHTML = descHtml;
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
             document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
-            lightbox.classList.remove('opacity-100');
-            lightbox.classList.add('opacity-0');
-            
+            modal.classList.remove('opacity-100');
             setTimeout(() => {
-                lightbox.classList.add('hidden');
+                modal.classList.add('hidden');
                 document.body.style.overflow = 'auto';
-            }, 400);
+                
+                // Clear content to prevent old image flash on next open
+                document.getElementById('modal-img-container').innerHTML = '';
+            }, 500);
         }
 
-        lightbox.addEventListener('click', function(e) {
-            if (e.target === lightbox) {
-                closeModal();
-            }
-        });
-        
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
-                closeModal();
-            }
-        });
+        // Initialize Reveal on Load
+        window.onload = reveal;
     </script>
 </body>
 </html>
